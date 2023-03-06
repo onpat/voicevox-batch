@@ -4,10 +4,12 @@ import time
 import urllib.request
 import urllib.parse
 
+host = "http://127.0.0.1:50021"
+
 def vv(voice, text, dest):
-    qreq = urllib.request.Request('http://127.0.0.1:50021/audio_query?text='+urllib.parse.quote(text)+'&speaker='+voice, method="POST")
+    qreq = urllib.request.Request(host+'/audio_query?text='+urllib.parse.quote(text)+'&speaker='+voice, method="POST")
     qresp = urllib.request.urlopen(qreq)
-    vreq = urllib.request.Request('http://127.0.0.1:50021/synthesis?speaker='+voice, data=qresp, method="POST", headers={"Content-Type" : "application/json"})
+    vreq = urllib.request.Request(host+'/synthesis?speaker='+voice, data=qresp, method="POST", headers={"Content-Type" : "application/json"})
     vresp = urllib.request.urlopen(vreq).read()
     filevoice = open(dest, 'wb')
     filevoice.write(vresp)
@@ -26,11 +28,11 @@ if (len(args) != 2):
     print("aaaaaa [text]")
     print("bbbbbb [text]")
     print("<> [parition]")
-    print("encoding is utf-8, cr")
+    print("encoding is no bom utf-8, cr")
     quit()
 
 if (args[1] == "voices"):
-    voices = urllib.request.urlopen('http://127.0.0.1:50021/speakers').read()
+    voices = urllib.request.urlopen(host+'/speakers').read()
     print(urllib.parse.unquote(voices))
     quit()
 
@@ -68,4 +70,3 @@ while True:
         break
 filesprict.close()
 print("end")
-
